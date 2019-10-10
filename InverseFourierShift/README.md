@@ -1,6 +1,6 @@
 # `InverseFourierShift`
 
-![status: unpublished](https://img.shields.io/badge/status-unpublished-orange)
+![status: submitted](https://img.shields.io/badge/status-submitted-orange)
 
 Inverse zero-frequency shift
 

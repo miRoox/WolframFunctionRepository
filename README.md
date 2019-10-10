@@ -4,6 +4,6 @@ This repository has notebooks for the [Wolfram Function Repository](https://reso
 
 ## Status
 
-- [ ] `SetByRules`
-- [ ] `FourierShift`
-- [ ] `InverseFourierShift`
+- [ ] `SetByRules` (Submitted)
+- [ ] `FourierShift` (Submitted)
+- [ ] `InverseFourierShift` (Submitted)
