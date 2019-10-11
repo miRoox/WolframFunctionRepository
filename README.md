@@ -6,4 +6,4 @@ This repository has notebooks for the [Wolfram Function Repository](https://reso
 
 - [ ] `SetByRules` (Submitted)
 - [x] [`FourierShift`](https://resources.wolframcloud.com/FunctionRepository/resources/FourierShift)
-- [ ] `InverseFourierShift` (Submitted)
+- [ ] `FourierShiftInverse` (Review)
