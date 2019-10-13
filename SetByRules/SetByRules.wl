@@ -1,22 +1,22 @@
 (* ::Package:: *)
 
-iSetByRules[rules:{(_Rule|_RuleDelayed)...}]:=HoldComplete[rules]/.{Rule->Set,RuleDelayed->SetDelayed}
+SetAttributes[quote,HoldAll];
+release[expr_]:=expr/.{quote[e_]:>e}
+replace[Rule[lhs_,rhs_]]:=quote@Set[lhs,rhs]
+replace[RuleDelayed[lhs_,rhs_]]:=quote@SetDelayed[lhs,rhs]
+replace[rule:{(_Rule|_RuleDelayed)}]:=replace@First[rule]
+replace[rules:{(_Rule|_RuleDelayed)..}]:=(ResourceFunction["ResourceFunctionMessage"][SetByRules::conflict,rules];replace@First[rules])
+replace[expr_]:=(ResourceFunction["ResourceFunctionMessage"][SetByRules::rules,expr];$Failed)
 
-SetByRules[rule:(_Rule|_RuleDelayed)]:=First@SetByRules[{rule}]
-SetByRules[rules:{(_Rule|_RuleDelayed)...}]:=Identity@@iSetByRules[rules]
-SetByRules[rules:{__List}]:=SetByRules/@rules
-SetByRules[rules:(_Dispatch|_Association)]:=SetByRules[Normal@rules]
+merge[rules:{(_Rule|_RuleDelayed)..},f_]:=f/@Gather[rules,patternEquivalentQ]
+patternEquivalentQ[a_,b_]:=MatchQ[Internal`ComparePatterns[a,b],"Identical"|"Equivalent"]
 
-SetByRules/:(scope:With|Block|Module)[SetByRules[rules_/;MatchQ[rules,{(_Rule|_RuleDelayed)...}]],body_]:= 
-  With[{vars=Unevaluated@@iSetByRules[rules]},
-    scope[vars,body] /;FreeQ[vars,iSetByRules]
-  ]
-SetByRules/:(scope:With|Block|Module)[SetByRules[rule_/;MatchQ[rule,_Rule|_RuleDelayed]],body_]:=
-  scope[SetByRules[{rule}],body]
-SetByRules/:(scope:With|Block|Module)[SetByRules[rules_/;MatchQ[rules,{__List}]],body_]:=
-  scope[SetByRules[#],body]&/@rules
-SetByRules/:(scope:With|Block|Module)[SetByRules[rules_/;MatchQ[rules,_Dispatch|_Association]],body_]:=
-  scope[SetByRules[Normal@rules],body]
+Default[SetByRules]=First;
+SetByRules::rules="`1` is neither a list of replacement rules nor a valid dispatch table.";
+SetByRules::conflict="`1` contains conflict rules, only the first rule will be applied.";
+SetByRules[rule:(_Rule|_RuleDelayed),_.]:=replace[rule]//release
+SetByRules[rules:(_List|_Dispatch|_Association),f_.]:=replace/@merge[Flatten@Normal@rules,f]//release
+SetByRules[expr_,_.]:=(ResourceFunction["ResourceFunctionMessage"][SetByRules::rules,expr];$Failed)
 
 
 
