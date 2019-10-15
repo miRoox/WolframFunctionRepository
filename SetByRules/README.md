@@ -1,5 +1,5 @@
 # `SetByRules`
 
-![status: review](https://img.shields.io/badge/status-review-orange)
+[![status: published](https://img.shields.io/badge/status-published-brightgreen)](https://resources.wolframcloud.com/FunctionRepository/resources/SetByRules)
 
-Assignments according to the rules
+Use rules to make assignments
